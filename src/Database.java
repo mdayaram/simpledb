@@ -42,6 +42,5 @@ public class Database {
 		rollbacks.clear();
 	}
 
-	public static class InvalidRollbackException extends Exception { }
 }
 

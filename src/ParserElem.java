@@ -5,7 +5,12 @@ public enum ParserElem {
 		public String runOn(Database db, String...args) {
 			super.runOn(db, args);
 			// throw the exception if it can't be parsed
-			int data = Integer.parseInt(args[1]);
+			int data;
+			try {
+				data = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+				return "ERROR:  '" + args[1] + "' is not an integer.";
+			}
 			db.set(args[0], data);
 			return null;
 		}
@@ -65,7 +70,7 @@ public enum ParserElem {
 		@Override
 		public String runOn(Database db, String...args) {
 			super.runOn(db, args);
-			return "It's over!  Goodbye!";
+			return "It's over!  Goodbye! ::killing myself::";
 		}
 	};
 

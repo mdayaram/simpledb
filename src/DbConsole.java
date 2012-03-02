@@ -3,21 +3,34 @@ import java.util.*;
 
 public class DbConsole {
 
-	public static String parse(String input, Database db) {
-		if (input == null || input.isEmpty()) return null;
-		String[] cmd = input.split("\\s+");
-		if (cmd.length == 0) return null;
-
-		ParserElem elem = ParserElem.getElem(cmd[0]);
-		if (elem == null) return "INVALID COMMAND";
-
-		String[] args = Arrays.copyOfRange(cmd, 1, cmd.length);
-		return elem.runOn(db, args);
-	}
-
-	public static void main(String...args) {
+	public static void main(String...args) throws Exception {
 		Database simpledb = new Database();
-		System.out.println("READY!");
+		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+		
+		ParserElem cmd = null;
+		do {
+			System.out.print("\nsimpledb >  ");
+
+			String[] vanillaCmd = input.readLine().split("\\s+");
+			if (vanillaCmd.length == 0) continue;
+
+			cmd = ParserElem.getElem(vanillaCmd[0]);
+			String[] cmdArgs = Arrays.copyOfRange(vanillaCmd, 1, vanillaCmd.length);
+			
+			if (cmd == null) {
+				System.out.println("INVALID COMMAND");
+				continue;
+			}
+
+			try {
+				String result = cmd.runOn(simpledb, cmdArgs);
+				if(result != null) {
+					System.out.println(result);
+				}
+			} catch (Exception e) {
+				System.out.println(e.toString());
+			}
+		} while (cmd != ParserElem.END);
 	}
 }
 

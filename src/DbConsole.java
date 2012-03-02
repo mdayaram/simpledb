@@ -9,10 +9,10 @@ public class DbConsole {
 		
 		ParserElem cmd = null;
 		do {
-			System.out.print("\nsimpledb >  ");
+			System.out.print("\nsimpledb > ");
 
 			String[] vanillaCmd = input.readLine().split("\\s+");
-			if (vanillaCmd.length == 0) continue;
+			if (vanillaCmd.length == 0 || vanillaCmd[0].isEmpty()) continue;
 
 			cmd = ParserElem.getElem(vanillaCmd[0]);
 			String[] cmdArgs = Arrays.copyOfRange(vanillaCmd, 1, vanillaCmd.length);

@@ -67,3 +67,5 @@ Output:
 `40`  
 `INVALID ROLLBACK`  
 
+--
+Problem created by [Thumbtack](http://www.thumbtack.com/challenges)

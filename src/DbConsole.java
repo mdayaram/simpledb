@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * Handles all the input and output for the SimpleDB console.
+ */
 public class DbConsole {
 
 	public static void main(String...args) throws Exception {

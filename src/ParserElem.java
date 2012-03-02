@@ -1,10 +1,12 @@
-
+/**
+ * Enum class used for running the appropriate actions on the given
+ * database according to the given command string and arguments.
+ */
 public enum ParserElem {
 	SET("SET", 2) {
 		@Override
 		public String runOn(Database db, String...args) {
-			super.runOn(db, args);
-			// throw the exception if it can't be parsed
+			checkArgsLength(args);
 			int data;
 			try {
 				data = Integer.parseInt(args[1]);
@@ -19,7 +21,7 @@ public enum ParserElem {
 	GET("GET", 1) {
 		@Override
 		public String runOn(Database db, String...args) {
-			super.runOn(db, args);
+			checkArgsLength(args);
 			Integer value = db.get(args[0]);
 			if (value == null) return "NULL";
 			else return value.toString();
@@ -29,7 +31,7 @@ public enum ParserElem {
 	UNSET("UNSET", 1) {
 		@Override
 		public String runOn(Database db, String...args) {
-			super.runOn(db, args);
+			checkArgsLength(args);
 			db.set(args[0], null);
 			return null;
 		}
@@ -38,7 +40,7 @@ public enum ParserElem {
 	BEGIN("BEGIN", 0) { 
 		@Override
 		public String runOn(Database db, String...args) {
-			super.runOn(db, args);
+			checkArgsLength(args);
 			db.begin();
 			return null;
 		}
@@ -47,7 +49,7 @@ public enum ParserElem {
 	ROLLBACK("ROLLBACK", 0) {
 		@Override
 		public String runOn(Database db, String...args) {
-			super.runOn(db, args);
+			checkArgsLength(args);
 			try {
 				db.rollback();
 			} catch (InvalidRollbackException e) {
@@ -60,7 +62,7 @@ public enum ParserElem {
 	COMMIT("COMMIT", 0) {
 		@Override
 		public String runOn(Database db, String...args) {
-			super.runOn(db, args);
+			checkArgsLength(args);
 			db.commit();
 			return null;
 		}
@@ -69,37 +71,38 @@ public enum ParserElem {
 	END("END", 0) {
 		@Override
 		public String runOn(Database db, String...args) {
-			super.runOn(db, args);
+			checkArgsLength(args);
 			return "It's over!  Goodbye! ::killing myself::";
 		}
 	};
 
 	private final String parseString;
 	private final int numArgs;
+	
 	private ParserElem(String parseString, int numArgs) {
 		this.parseString = parseString;
 		this.numArgs = numArgs;
 	}
 
-	public String getParseString() {
-		return parseString;
-	}
+	public abstract String runOn(Database db, String...args);
 
-	public String runOn(Database db, String...args) {
+	public void checkArgsLength(String...args) {
 		if (args == null || args.length != numArgs) {
 			throw new IllegalArgumentException(
 				parseString + " requires " + numArgs + " number of arguments.");
 		}
-		return null;
 	}
 
 	public static ParserElem getElem(String cmdString) {
+		if (cmdString == null) return null;
+
 		cmdString = cmdString.trim();
 		for(ParserElem elem : values()) {
-			if (elem.getParseString().equals(cmdString)) {
+			if (cmdString.equals(elem.parseString)) {
 				return elem;
 			}
 		}
+
 		return null;
 	}
 }
